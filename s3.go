@@ -48,9 +48,9 @@ func GetObject(key, bucket string) error {
 		Key:    aws.String(key),
 	}
 
-	size, err := session.GetObject(context.TODO(), i)
+	object, err := session.GetObject(context.TODO(), i)
 
-	log.Printf("Cache downloaded successfully, containing %d bytes", size)
+	log.Printf("Cache downloaded successfully, containing %d bytes", object.ContentLength)
 
 	return err
 }
