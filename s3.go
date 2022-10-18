@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	awshttp "github.com/aws/aws-sdk-go-v2/aws/transport/http"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/dustin/go-humanize"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -41,17 +44,26 @@ func PutObject(key, bucket, s3Class string) error {
 
 // GetObject - Get object from s3 bucket
 func GetObject(key, bucket string) error {
+
+	downloadedFile, err := os.Create(key)
+	if err != nil {
+		log.Println(err)
+	}
+	defer downloadedFile.Close()
+
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	session := s3.NewFromConfig(cfg)
 
-	i := &s3.GetObjectInput{
+	input := &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}
 
-	object, err := session.GetObject(context.TODO(), i)
-
-	log.Printf("Cache downloaded successfully, size %s", humanize.Bytes(uint64(object.ContentLength)))
+	downloader := manager.NewDownloader(session)
+	numBytes, err := downloader.Download(context.TODO(), downloadedFile, input)
+	if err == nil {
+		log.Printf("Cache downloaded successfully, size %s", humanize.Bytes(uint64(numBytes)))
+	}
 
 	return err
 }
@@ -85,10 +97,11 @@ func ObjectExists(key, bucket string) (bool, error) {
 	}
 
 	if _, err = session.HeadObject(context.TODO(), i); err != nil {
-		var nsk *types.NoSuchKey
-		if errors.As(err, &nsk) {
+		var responseError *awshttp.ResponseError
+		if errors.As(err, &responseError) && responseError.ResponseError.HTTPStatusCode() == http.StatusNotFound {
 			return false, nil
 		}
+		return false, err
 	}
 
 	return true, nil
