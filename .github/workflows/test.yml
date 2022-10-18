@@ -62,19 +62,19 @@ jobs:
           artifacts: |
             temp/*
 
-#      - name: Remove temp folder
-#        shell: bash
-#        run: rm -rf temp
+      - name: Remove temp folder
+        shell: bash
+        run: rm -rf temp
 
-      - name: Get cache
-        uses: ./
-        with:
-          action: get
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-          bucket: ${{ secrets.AWS_BUCKET }}
-          key: ${{ hashFiles('action.yml') }}-${{ matrix.os }}
+#      - name: Get cache
+#        uses: ./
+#        with:
+#          action: get
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: eu-west-1
+#          bucket: ${{ secrets.AWS_BUCKET }}
+#          key: ${{ hashFiles('action.yml') }}-${{ matrix.os }}
 
       - name: List cache folder
         shell: bash
