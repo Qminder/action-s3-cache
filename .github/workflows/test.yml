@@ -48,7 +48,8 @@ jobs:
           mkdir -p temp/{dir1,dir2,dir3}/{subdir1,subdir2,subdir3}
           echo "fileexample" > temp/file.txt
           cat temp/file.txt | tee temp/dir1/file.txt temp/dir2/file.txt temp/dir3/file.txt temp/dir1/subdir1/file.txt temp/dir2/subdir2/file.txt temp/dir3/subdir3/file.txt
-          dd if=/dev/urandom of=temp/large-file.txt bs=1G count=1
+          mkdir ../outside/
+          echo "whatever" > ../outside/thefile.txt
 
       - name: Put cache
         uses: ./
@@ -61,20 +62,21 @@ jobs:
           key: ${{ hashFiles('action.yml') }}-${{ matrix.os }}
           artifacts: |
             temp/*
+            ../outside*
 
       - name: Remove temp folder
         shell: bash
         run: rm -rf temp
 
-#      - name: Get cache
-#        uses: ./
-#        with:
-#          action: get
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: eu-west-1
-#          bucket: ${{ secrets.AWS_BUCKET }}
-#          key: ${{ hashFiles('action.yml') }}-${{ matrix.os }}
+      - name: Get cache
+        uses: ./
+        with:
+          action: get
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+          bucket: ${{ secrets.AWS_BUCKET }}
+          key: ${{ hashFiles('action.yml') }}-${{ matrix.os }}
 
       - name: List cache folder
         shell: bash
