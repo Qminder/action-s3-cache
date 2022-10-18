@@ -86,6 +86,7 @@ func ObjectExists(key, bucket string) (bool, error) {
 	}
 
 	if _, err = session.HeadObject(context.TODO(), i); err != nil {
+		log.Printf("Error on checking if object exists: %s", err)
 		var nsk *types.NoSuchKey
 		if errors.As(err, &nsk) {
 			return false, nil
