@@ -50,8 +50,9 @@ func GetObject(key, bucket string) error {
 	}
 
 	object, err := session.GetObject(context.TODO(), i)
-
-	log.Printf("Cache downloaded successfully, size %s", humanize.Bytes(uint64(object.ContentLength)))
+	if err == nil {
+		log.Printf("Cache downloaded successfully, size %s", humanize.Bytes(uint64(object.ContentLength)))
+	}
 
 	return err
 }
