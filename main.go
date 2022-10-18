@@ -45,7 +45,6 @@ func main() {
 			}
 
 			if err := Unzip(action.Key); err != nil {
-				log.Println("Failed to unzip the file")
 				log.Print(err)
 			}
 		} else {
