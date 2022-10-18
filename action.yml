@@ -29,6 +29,9 @@ inputs:
     description: "Specifies the desired Storage Class for the object."
     required: false
     default: STANDARD
+outputs:
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
 runs:
   using: "composite"
   steps:
