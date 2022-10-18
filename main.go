@@ -33,7 +33,7 @@ func main() {
 		log.Printf("Trying to restore cache. Key: %s", action.Key)
 		exists, err := ObjectExists(action.Key, action.Bucket)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to check if objext exist in S3: %s", err)
 		}
 
 		// Get and unzip if object exists
@@ -45,6 +45,7 @@ func main() {
 			}
 
 			if err := Unzip(action.Key); err != nil {
+				log.Println("Failed to unzip the file")
 				log.Print(err)
 			}
 		} else {
