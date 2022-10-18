@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/dustin/go-humanize"
 	"log"
 	"os"
 
@@ -50,7 +51,7 @@ func GetObject(key, bucket string) error {
 
 	object, err := session.GetObject(context.TODO(), i)
 
-	log.Printf("Cache downloaded successfully, containing %d bytes", object.ContentLength)
+	log.Printf("Cache downloaded successfully, size %s", humanize.Bytes(uint64(object.ContentLength)))
 
 	return err
 }

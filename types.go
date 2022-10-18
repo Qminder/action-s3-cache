@@ -9,9 +9,6 @@ const (
 
 	// GetAction - Get artifacts
 	GetAction = "get"
-
-	// ErrCodeNotFound - s3 Not found error code
-	ErrCodeNotFound = "NotFound"
 )
 
 type (

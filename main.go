@@ -30,13 +30,15 @@ func main() {
 			log.Fatal(err)
 		}
 	case GetAction:
+		log.Printf("Trying to restore cache. Key: %s", action.Key)
 		exists, err := ObjectExists(action.Key, action.Bucket)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		// Get and and unzip if object exists
+		// Get and unzip if object exists
 		if exists {
+			log.Println("Cache hit. Downloading.")
 			if err := GetObject(action.Key, action.Bucket); err != nil {
 				log.Print(err)
 				return
@@ -46,7 +48,7 @@ func main() {
 				log.Print(err)
 			}
 		} else {
-			log.Printf("No caches found for the following key: %s", action.Key)
+			log.Println("Cache miss.")
 		}
 	case DeleteAction:
 		if err := DeleteObject(action.Key, action.Bucket); err != nil {
