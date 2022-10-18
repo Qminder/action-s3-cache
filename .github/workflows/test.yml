@@ -62,9 +62,9 @@ jobs:
           artifacts: |
             temp/*
 
-      - name: Remove temp folder
-        shell: bash
-        run: rm -rf temp
+#      - name: Remove temp folder
+#        shell: bash
+#        run: rm -rf temp
 
       - name: Get cache
         uses: ./
