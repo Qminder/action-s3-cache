@@ -22,6 +22,7 @@ func main() {
 			log.Fatal("No artifacts patterns provided")
 		}
 
+		log.Printf("Storing cached object. Key: %s", action.Key)
 		if err := Zip(action.Key, action.Artifacts); err != nil {
 			log.Fatal(err)
 		}
