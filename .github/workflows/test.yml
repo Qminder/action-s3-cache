@@ -47,6 +47,7 @@ jobs:
           mkdir -p temp/{dir1,dir2,dir3}/{subdir1,subdir2,subdir3}
           echo "fileexample" > temp/file.txt
           cat temp/file.txt | tee temp/dir1/file.txt temp/dir2/file.txt temp/dir3/file.txt temp/dir1/subdir1/file.txt temp/dir2/subdir2/file.txt temp/dir3/subdir3/file.txt
+          dd if=/dev/urandom of=temp/large-file.txt bs=1G count=1
 
       - name: Put cache
         uses: ./
