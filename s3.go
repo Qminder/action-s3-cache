@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	awshttp "github.com/aws/aws-sdk-go-v2/aws/transport/http"
 	"github.com/dustin/go-humanize"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -86,8 +88,8 @@ func ObjectExists(key, bucket string) (bool, error) {
 	}
 
 	if _, err = session.HeadObject(context.TODO(), i); err != nil {
-		var nsk *types.NotFound
-		if errors.As(err, &nsk) {
+		var responseError *awshttp.ResponseError
+		if errors.As(err, &responseError) && responseError.ResponseError.HTTPStatusCode() == http.StatusNotFound {
 			return false, nil
 		}
 		return false, err
