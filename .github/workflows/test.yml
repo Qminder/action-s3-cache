@@ -74,6 +74,10 @@ jobs:
           bucket: ${{ secrets.AWS_BUCKET }}
           key: gradle-api-ea84ef6cf3559c3429f95a87e77928146d208ee3dc20e50480c418decc649c55
 
+      - name: List current folder
+        shell: bash
+        run: ls -alh
+
       - name: List cache folder
         shell: bash
         run: ls temp
