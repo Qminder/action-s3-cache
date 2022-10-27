@@ -53,7 +53,7 @@ func main() {
 			log.Println("Cache miss.")
 		}
 
-		log.Printf("::set-output cache-hit=%s\n", strconv.FormatBool(exists))
+		fmt.Printf("::set-output cache-hit=%s\n", strconv.FormatBool(exists))
 
 	case DeleteAction:
 		if err := DeleteObject(action.Key, action.Bucket); err != nil {
