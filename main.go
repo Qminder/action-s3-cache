@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -53,7 +54,10 @@ func main() {
 			log.Println("Cache miss.")
 		}
 
-		fmt.Printf("::set-output cache-hit=%s\n", strconv.FormatBool(exists))
+		err = setOutput("cache-hit", strconv.FormatBool(exists))
+		if err != nil {
+			log.Fatalf("Failed to set output: %s", err)
+		}
 
 	case DeleteAction:
 		if err := DeleteObject(action.Key, action.Bucket); err != nil {
@@ -62,4 +66,28 @@ func main() {
 	default:
 		log.Fatalf("Action \"%s\" is not allowed. Valid options are: [%s, %s, %s]", act, PutAction, DeleteAction, GetAction)
 	}
+}
+
+func setOutput(name, value string) error {
+	file := os.Getenv("GITHUB_OUTPUT")
+	if file == "" {
+		return errors.New("GITHUB_OUTPUT env variable not specified")
+	}
+
+	return appendToFile(file, fmt.Sprintf("%s=%s\n", name, value))
+}
+
+func appendToFile(file, content string) error {
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+
+	_, err = f.WriteString(content)
+	closeErr := f.Close()
+	if err != nil {
+		return err
+	}
+
+	return closeErr
 }
