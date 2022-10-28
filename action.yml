@@ -32,11 +32,13 @@ inputs:
 outputs:
   cache-hit:
     description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.run.outputs.cache-hit }}
 runs:
   using: "composite"
   steps:
     - run: $GITHUB_ACTION_PATH/entrypoint.sh
       shell: bash
+      id: run
       env:
         ACTION: ${{ inputs.action }}
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
